@@ -10,9 +10,12 @@
 </head>
 <body>
 <div ng:controller='SetterForCatanCtrl'>
-    <select ng:model='board'>
-        <option ng:repeat='board in boards'>{{board}}</option>
-    </select>
+    <label>
+        Board:
+        <select ng:model='board'>
+            <option ng:repeat='board in boards'>{{board}}</option>
+        </select>
+    </label>
     <br/>
     <br/>
     <div ng:repeat='row in _.range(0,rowCount)'>
