@@ -1,0 +1,13 @@
+# Home page
+GET     /                                           controllers.Application.index
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file                               controllers.Assets.at(path="/public", file)
+
+GET     /small.json                                 controllers.Application.small
+
+GET     /small-spiral.json                          controllers.Application.smallSpiral
+
+GET     /small-traders-and-barbarians.json          controllers.Application.smallTradersAndBarbarians
+
+GET     /small-traders-and-barbarians-spiral.json   controllers.Application.smallTradersAndBarbariansSpiral
