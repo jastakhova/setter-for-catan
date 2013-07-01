@@ -16,8 +16,8 @@ function getHexagonCoordinateId(x, y) {
 function SetterForCatanCtrl($scope) {
     $scope._ = _;
 
-    $scope.rowCount = 12;
-    $scope.columnCount = 12;
+    $scope.rowCount = 1;
+    $scope.columnCount = 1;
     // console.log(getHexagonCoordinateId(1, 0)); // (3,3)
     // console.log(getHexagonCoordinateId(0, 0)); // (4,4)
     // console.log(getHexagonCoordinateId(0, 1)); // (3,4)

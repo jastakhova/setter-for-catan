@@ -3,17 +3,25 @@ body {
 }
 
 .hexagon-coordinate {
-    width: 36px;
-    height: 62.4px; /* ( width x cos(30) ) x 2 */
-    margin-left: 21px;
+    width: 72px; /* tan(60) x height [=32] */
+    /*  height targeting 64px finished height:
+        height = 64 / 2 = 32
+        but you need half the difference from the image for later
+        IMGDIF = (image height - height) / 2
+        IMGDIF = (69 - 64) / 2 = 5 /2 = 2.5
+    */
+    height: 18px;
     position: relative;
-    background-image: url(../images/mountain.png);
-    background-position: -18px; /* -left position -1 x width x sin(30) */
+    background-image: url(../images/chrome.png);
+    /* For background positioning assuming centered
+       X = -1 x ((div width - image width) / 2 )
+       Y = -1 x ((image height / 2) + IMGDIF)
+    */
+    background-position: 0 50%;
     background-repeat: no-repeat;
-    background-size: auto 120%;
     color: #000000;
     text-align: center;
-    line-height: 62.4px;
+    line-height: 72px; /* total height */
     display: inline-block;
 }
 
@@ -25,51 +33,7 @@ body {
     top: -16.5px;
 }
 
-.rotate30 {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    overflow: hidden;
-    background-image: inherit;
-
-    -ms-transform:rotate(60deg); /* IE 9 */
-    -moz-transform:rotate(60deg); /* Firefox */
-    -webkit-transform:rotate(60deg); /* Safari and Chrome */
-    -o-transform:rotate(60deg); /* Opera */
-    transform:rotate(60deg);
-}
-
-.rotate30:before {
-    content: '';
-    position: absolute;
-    width: 57px; /* width of main + margin sizing */
-    height: 57px;
-    background-image: inherit;
-    background-position: 0 0;
-    background-repeat: no-repeat;
-    background-size: auto 120%;
-    bottom: 0;
-    left: 0;
-    z-index: 1;
-
-    -ms-transform:rotate(-60deg) translate(-54px, 0); /* IE 9 */
-    -moz-transform:rotate(-60deg) translate(-54px, 0); /* Firefox */
-    -webkit-transform:rotate(-60deg) translate(-54px, 0); /* Safari and Chrome */
-    -o-transform:rotate(-60deg) translate(-54px, 0); /* Opera */
-    transform:rotate(-60deg) translate(-54px, 0);
-
-    -ms-transform-origin: 0 0; /* IE 9 */
-    -webkit-transform-origin: 0 0; /* Safari and Chrome */
-    -moz-transform-origin: 0 0; /* Firefox */
-    -o-transform-origin: 0 0; /* Opera */
-    transform-origin: 0 0;
-}
-
-.rotate120 {
-    content: '';
+.rotate60 {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -79,36 +43,86 @@ body {
     overflow: hidden;
     background-image: inherit;
 
-    -ms-transform:rotate(-60deg); /* IE 9 */
-    -moz-transform:rotate(-60deg); /* Firefox */
-    -webkit-transform:rotate(-60deg); /* Safari and Chrome */
-    -o-transform:rotate(-60deg); /* Opera */
-    transform:rotate(-60deg);
+    -moz-transform:rotate(60deg); /* Firefox */
+    -ms-transform:rotate(60deg); /* IE 9 */
+    -o-transform:rotate(60deg); /* Opera */
+    -webkit-transform:rotate(60deg); /* Safari and Chrome */
+    transform:rotate(60deg);
+}
+
+.rotate60:before {
+    content: '';
+    position: absolute;
+    width: 72px; /* image width */
+    height: 72px; /* image height */
+    background-image: inherit;
+    background-position: 0 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+
+    /* the translate is calculated:
+       X = equals background position of hexagon-coordinate - (IMGDIF/2)
+       Y = -1 x ???
+    */
+    -moz-transform:rotate(-60deg) translate(-18.75px, 2px); /* Firefox */
+    -ms-transform:rotate(-60deg) translate(-18.75px, 2px); /* IE 9 */
+    -o-transform:rotate(-60deg) translate(-18.75px, 2px); /* Opera */
+    -webkit-transform:rotate(-60deg) translate(-10%, 0); /* Safari and Chrome */
+    transform:rotate(-60deg) translate(-18.75px, 2px);
+
+    /* these are set to half the image width and height */
+    -moz-transform-origin: 34.5px 34.5px; /* Firefox */
+    -ms-transform-origin: 34.5px 34.5px; /* IE 9 */
+    -o-transform-origin: 34.5px 34.5px; /* Opera */
+    -webkit-transform-origin: 36px 36px; /* Safari and Chrome */
+    transform-origin: 34.5px 34.5px;
+}
+
+.rotate120 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    overflow: hidden;
+    background-image: inherit;
+    background-position: 0 0;
+
+    -moz-transform:rotate(120deg); /* Firefox */
+    -ms-transform:rotate(120deg); /* IE 9 */
+    -o-transform:rotate(120deg); /* Opera */
+    -webkit-transform:rotate(120deg); /* Safari and Chrome */
+    transform:rotate(120deg);
 }
 
 .rotate120:before {
-    content: '';
+    content: none;
     position: absolute;
     width: 100%;
     height: 100%;
     background-image: inherit;
     background-position: 0 0;
     background-repeat: no-repeat;
-    background-size: auto 120%;
+    background-size: auto;
     bottom: 0;
     left: 0;
     z-index: 1;
 
-    /*translate properties are initial width (72px) and half height (62.4 / 2 = 31.2) */
-    -ms-transform:rotate(60deg) translate(72px, 31.2px); /* IE 9 */
-    -moz-transform:rotate(60deg) translate(72px, 31.2px); /* Firefox */
-    -webkit-transform:rotate(60deg) translate(72px, 31.2px); /* Safari and Chrome */
-    -o-transform:rotate(60deg) translate(72px, 31.2px); /* Opera */
-    transform:rotate(60deg) translate(72px, 31.2px);
+    /* the translate is calculated:
+       X = ???
+       Y = ???
+    */
+    -moz-transform:rotate(-120deg) translate(-93.5px, -38px); /* Firefox */
+    -ms-transform:rotate(-120deg) translate(-93.5px, -38px); /* IE 9 */
+    -o-transform:rotate(-120deg) translate(-93.5px, -38px); /* Opera */
+    -webkit-transform:rotate(-120deg) translate(50%, 50%); /* Safari and Chrome */
+    transform:rotate(-120deg) translate(-93.5px, -38px);
 
-    -ms-transform-origin: 100% 0; /* IE 9 */
-    -webkit-transform-origin: 100% 0; /* Safari and Chrome */
-    -moz-transform-origin: 100% 0; /* Firefox */
-    -o-transform-origin: 100% 0; /* Opera */
-    transform-origin: 100% 0;
+    -moz-transform-origin: 0 0; /* Firefox */
+    -ms-transform-origin: 0 0; /* IE 9 */
+    -o-transform-origin: 0 0; /* Opera */
+    -webkit-transform-origin: 0 0; /* Safari and Chrome */
+    transform-origin: 0 0;
 }

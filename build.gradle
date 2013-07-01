@@ -1,0 +1,51 @@
+import sun.tools.jar.resources.jar
+
+apply plugin: 'application'
+apply plugin: 'scala'
+
+repositories {
+    mavenCentral()
+
+    ivy {
+        ivyPattern "${projectDir}/play-2.1.1/repository/local/[organisation]/[module]/[revision]/ivys/ivy.xml"
+        artifactPattern "${projectDir}/play-2.1.1/repository/local/[organisation]/[module]/[revision]/jars/[module].[ext]"
+    }
+}
+
+dependencies {
+    compile 'org.hamcrest:hamcrest-core:1.1'
+    compile 'org.scalatest:scalatest_2.10:1.9.1'
+
+    compile group: 'play', name: 'play_2.10', version: '2.1.1', configuration: 'compile'
+}
+
+sourceSets {
+    main {
+        scala {
+            srcDirs = ['src/main']
+        }
+    }
+
+    test {
+        scala {
+            srcDirs = ['src/test']
+        }
+    }
+}
+
+task small(dependsOn: [configurations.compile, build]) << {
+    // TODO: use output of jar task
+    def classpath = configurations.compile.inject("${buildDir}/libs/setter-for-catan.jar") { String accum, File file ->
+        "${accum}:${file}"
+    }
+    final env = [
+            "CLASSPATH=${classpath}",
+            "JAVA_HOME=${System.getenv('JAVA_HOME')}",
+            "SCALA_HOME=${System.getenv('SCALA_HOME')}"
+    ]
+
+    final command = ["${projectDir}/setter-for-catan.scala", 'small']
+    final process = command.execute(env, null)
+
+    println (process.text)
+}

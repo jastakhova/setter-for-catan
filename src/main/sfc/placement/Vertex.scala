@@ -26,10 +26,10 @@ object Vertex extends Enumeration {
   }
 
   class VertexValue(vertex: Value) {
-    def isOnTop = this == Top || this == TopRight || this == TopLeft
-    def isOnRight = this == TopRight || this == BottomRight
-    def isOnLeft = this == BottomLeft || this == TopLeft
-    def isOnBottom = this == BottomRight || this == Bottom || this == BottomLeft
+    def isOnTop = vertex == Top || vertex == TopRight || vertex == TopLeft
+    def isOnRight = vertex == TopRight || vertex == BottomRight
+    def isOnLeft = vertex == BottomLeft || vertex == TopLeft
+    def isOnBottom = vertex == BottomRight || vertex == Bottom || vertex == BottomLeft
     def before = Vertex((vertex.id + maxId - 1) % maxId)
     def after = Vertex((vertex.id + 1) % maxId)
     def to(to: Vertex): List[Vertex] = {
