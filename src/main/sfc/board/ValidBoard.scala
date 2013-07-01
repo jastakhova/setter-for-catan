@@ -23,7 +23,6 @@ object ValidBoard {
 
       coordinates zip Random.shuffle(tileSet)
     }).toMap
-    println(configuration)
     val board = Board(configuration)
 
     if (board.check) {
