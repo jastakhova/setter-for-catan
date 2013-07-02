@@ -33,19 +33,57 @@ sourceSets {
     }
 }
 
-task small(dependsOn: [configurations.compile, build]) << {
-    // TODO: use output of jar task
-    def classpath = configurations.compile.inject("${buildDir}/libs/setter-for-catan.jar") { String accum, File file ->
-        "${accum}:${file}"
+// TODO: move to custom task class
+tasks.addRule("Pattern: generate<Type>BoardConfiguration") { String taskName ->
+    if (taskName.startsWith('generate') && taskName.endsWith('BoardConfiguration')) {
+        task(taskName) {
+            dependsOn configurations.compile, build
+            doLast {
+                final boardConfigurationName = taskName - 'generate' - 'BoardConfiguration'
+                final boardConfigurationType = camelCaseToHyphenated(boardConfigurationName[0].toLowerCase() + boardConfigurationName.substring(1))
+
+                final classpath = configurations.compile.inject(tasks.jar.archivePath.toString()) { String accum, File file ->
+                    "${accum}:${file}"
+                }
+                final env = [
+                        "CLASSPATH=${classpath}",
+                        "JAVA_HOME=${System.getenv('JAVA_HOME')}",
+                        "SCALA_HOME=${System.getenv('SCALA_HOME')}"
+                ]
+
+                final command = ["${projectDir}/setter-for-catan.scala", boardConfigurationType]
+                final process = command.execute(env, null)
+
+                println (process.text)
+            }
+        }
     }
-    final env = [
-            "CLASSPATH=${classpath}",
-            "JAVA_HOME=${System.getenv('JAVA_HOME')}",
-            "SCALA_HOME=${System.getenv('SCALA_HOME')}"
-    ]
+}
 
-    final command = ["${projectDir}/setter-for-catan.scala", 'small']
-    final process = command.execute(env, null)
+String camelCaseToHyphenated(final camelCasedString) {
+    int index = indexOfUpperCaseLetter(camelCasedString, 0)
+    if (index == -1) {
+        camelCasedString
+    } else {
+        String result = ''
 
-    println (process.text)
+        def range = 0..<index
+        while (index != -1) {
+            result += camelCasedString[range] + '-' + camelCasedString[index].toLowerCase()
+            index = indexOfUpperCaseLetter(camelCasedString, index + 1)
+            range = range.to+2..<index
+        }
+
+        result + camelCasedString.substring(range.to)
+    }
+}
+
+int indexOfUpperCaseLetter(String camelCasedString, int start) {
+    int index = camelCasedString.substring(start).findIndexOf { letter ->
+        def upperCaseLetters = 'A'..'Z'
+
+        upperCaseLetters.contains(letter)
+    }
+
+    (index == -1) ? index : start + index
 }
