@@ -1,7 +1,7 @@
 #!/bin/bash
 
 classpath="${CLASSPATH}"
-unset CLASSPATH
+unset CLASSPATH # this is needed to prevent Scala object not found errors
 
 exec ${SCALA_HOME}/bin/scala -cp "${classpath}" "$0" "$@" 2>&1
 !#
