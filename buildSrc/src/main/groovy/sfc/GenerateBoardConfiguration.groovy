@@ -1,33 +1,43 @@
 package sfc;
 
-import org.gradle.api.DefaultTask;
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.InputFiles;
 import org.gradle.api.tasks.TaskAction;
 
 /**
  * @author noel.yap@gmail.com
  */
 class GenerateBoardConfiguration extends DefaultTask {
-    // TODO: specify inputs
+    @InputFiles
+    def configuration = project.configurations.compile
+
+    @InputFile
+    def executable = new File("${project.projectDir}/setter-for-catan.scala")
+
+    @InputFile
+    def library = project.tasks.jar.archivePath
 
     String boardConfigurationType
 
     @TaskAction
     void apply() {
-        final boardConfigurationName = camelCaseToHyphenated(boardConfigurationType[0].toLowerCase() + boardConfigurationType.substring(1))
+        final boardConfigurationName =
+            camelCaseToHyphenated(boardConfigurationType[0].toLowerCase() + boardConfigurationType.substring(1))
 
-        final classpath = project.configurations.compile.inject(project.tasks.jar.archivePath.toString()) { String accum, File file ->
+        final classpath = configuration.inject(library.toString()) { String accum, File file ->
                 "${accum}:${file}"
         }
         final env = [
-        "CLASSPATH=${classpath}",
+                "CLASSPATH=${classpath}",
                 "JAVA_HOME=${System.getenv('JAVA_HOME')}",
                 "SCALA_HOME=${System.getenv('SCALA_HOME')}"
         ]
 
-        final command = ["${project.projectDir}/setter-for-catan.scala", boardConfigurationName]
+        final command = [executable.toString(), boardConfigurationName]
         final process = command.execute(env, null)
 
-        println (process.text)
+        println process.text
     }
 
     private static String camelCaseToHyphenated(final camelCasedString) {

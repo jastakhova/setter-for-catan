@@ -40,7 +40,6 @@ class GenerateBoardConfigurationRule {
 tasks.addRule("Pattern: ${GenerateBoardConfigurationRule.prefix}<Type>${GenerateBoardConfigurationRule.suffix}") { String taskName ->
     if (taskName.startsWith(GenerateBoardConfigurationRule.prefix) && taskName.endsWith(GenerateBoardConfigurationRule.suffix)) {
         task(taskName, type: sfc.GenerateBoardConfiguration) {
-            dependsOn configurations.compile, build
             boardConfigurationType = taskName - GenerateBoardConfigurationRule.prefix - GenerateBoardConfigurationRule.suffix
         }
     }
