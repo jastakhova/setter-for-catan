@@ -1,9 +1,6 @@
 #!/bin/bash
 
-classpath="${CLASSPATH}"
-unset CLASSPATH # this is needed to prevent Scala object not found errors
-
-exec ${SCALA_HOME}/bin/scala -cp "${classpath}" "$0" "$@" 2>&1
+exec ${SCALA_HOME}/bin/scala "$0" "$@" 2>&1
 !#
 
 import sfc.board._
