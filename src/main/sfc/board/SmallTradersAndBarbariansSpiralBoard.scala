@@ -17,28 +17,30 @@ object SmallTradersAndBarbariansSpiralBoard {
   val hexagonCoordinates = SmallTradersAndBarbariansBoard.hexagonCoordinates ++ SmallSpiralBoard.hexagonCoordinatesAdded
   val chevronCoordinates = SmallSpiralBoard.chevronCoordinates
 
-  def board: Board = {
-    val hexagonPositions: IndexedSeq[HexagonPosition] = hexagonCoordinates map {
-      new HexagonPosition(_)
-    }
-    val chevronPositions: IndexedSeq[ChevronPosition] = chevronCoordinates map { co =>
-      val coordinate: Coordinate = co._1
-      val orientation: VertexOrientation.VertexOrientation = co._2
-
-      new ChevronPosition(coordinate, orientation)
-    }
-
-    val hexagonPiecesConfiguration: ValidBoard.PiecesConfigSpec = (
-      hexagonPositions,
-      IndexedSeq(
-        (resourceTiles, resourceChits),
-        (lakeTiles, lakeChits)))
-    val chevronPiecesConfiguration: ValidBoard.PiecesConfigSpec = (
-      chevronPositions,
-      IndexedSeq(
-        (fisheryTiles, fisheryChits)))
-    val trianglePiecesConfiguration = SmallBoard.trianglePiecesConfiguration
-
-    ValidBoard(hexagonPiecesConfiguration, chevronPiecesConfiguration, trianglePiecesConfiguration)
+  val hexagonPositions: IndexedSeq[HexagonPosition] = hexagonCoordinates map {
+    new HexagonPosition(_)
   }
+  val chevronPositions: IndexedSeq[ChevronPosition] = chevronCoordinates map { co =>
+    val coordinate: Coordinate = co._1
+    val orientation: VertexOrientation.VertexOrientation = co._2
+
+    new ChevronPosition(coordinate, orientation)
+  }
+
+  val hexagonPiecesConfiguration: ValidBoard.PiecesConfigSpec = (
+    hexagonPositions,
+    IndexedSeq(
+      (resourceTiles, resourceChits),
+      (lakeTiles, lakeChits)))
+  val chevronPiecesConfiguration: ValidBoard.PiecesConfigSpec = (
+    chevronPositions,
+    IndexedSeq(
+      (fisheryTiles, fisheryChits)))
+  val trianglePiecesConfiguration = SmallBoard.trianglePiecesConfiguration
+
+  def board = ValidBoard(hexagonPiecesConfiguration, chevronPiecesConfiguration, trianglePiecesConfiguration)
+
+  val sampleSize = math.pow(6, 6).round
+  def count = ValidCount(hexagonPiecesConfiguration, trianglePiecesConfiguration)(sampleSize.asInstanceOf[Int])
+  def probability = count.asInstanceOf[Double] / sampleSize
 }

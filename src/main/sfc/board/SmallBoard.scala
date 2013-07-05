@@ -90,4 +90,8 @@ object SmallBoard {
       (portTiles, portChits)))
 
   def board = ValidBoard(hexagonPiecesConfiguration, trianglePiecesConfiguration)
+
+  val sampleSize = math.pow(6, 6).round
+  def count = ValidCount(hexagonPiecesConfiguration, trianglePiecesConfiguration)(sampleSize.asInstanceOf[Int])
+  def probability = count.asInstanceOf[Double] / sampleSize
 }

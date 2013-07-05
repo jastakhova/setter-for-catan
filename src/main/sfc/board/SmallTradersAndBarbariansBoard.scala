@@ -17,17 +17,19 @@ object SmallTradersAndBarbariansBoard {
   val hexagonCoordinatesRemoved = IndexedSeq(Coordinate(0, 2), Coordinate(0, -2), Coordinate(2, -2))
   val hexagonCoordinates: IndexedSeq[Coordinate] = SmallBoard.hexagonCoordinates diff hexagonCoordinatesRemoved
 
-  def board: Board = {
-    val hexagonPositions: IndexedSeq[HexagonPosition] = hexagonCoordinates map {
-      new HexagonPosition(_)
-    }
-
-    val hexagonPiecesConfiguration: ValidBoard.PiecesConfigSpec = (
-      hexagonPositions,
-      IndexedSeq(
-        (resourceTiles, resourceChits)))
-    val trianglePiecesConfiguration = SmallBoard.trianglePiecesConfiguration
-
-    ValidBoard(hexagonPiecesConfiguration, trianglePiecesConfiguration)
+  val hexagonPositions: IndexedSeq[HexagonPosition] = hexagonCoordinates map {
+    new HexagonPosition(_)
   }
+
+  val hexagonPiecesConfiguration: ValidBoard.PiecesConfigSpec = (
+    hexagonPositions,
+    IndexedSeq(
+      (resourceTiles, resourceChits)))
+  val trianglePiecesConfiguration = SmallBoard.trianglePiecesConfiguration
+
+  def board = ValidBoard(hexagonPiecesConfiguration, trianglePiecesConfiguration)
+
+  val sampleSize = math.pow(6, 6).round
+  def count = ValidCount(hexagonPiecesConfiguration, trianglePiecesConfiguration)(sampleSize.asInstanceOf[Int])
+  def probability = count.asInstanceOf[Double] / sampleSize
 }

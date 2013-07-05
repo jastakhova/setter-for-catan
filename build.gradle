@@ -32,6 +32,23 @@ sourceSets {
         }
     }
 }
+
+class CalculateValidBoardProbabilityRule {
+    static final prefix = 'calculateValid'
+    static final suffix = 'BoardProbability'
+}
+
+tasks.addRule("Pattern: ${CalculateValidBoardProbabilityRule.prefix}<Type>${CalculateValidBoardProbabilityRule.suffix}") { String taskName ->
+    if (taskName.startsWith(CalculateValidBoardProbabilityRule.prefix) && taskName.endsWith(CalculateValidBoardProbabilityRule.suffix)) {
+        task(taskName, type: sfc.CalculateValidBoardProbability) {
+            // FIXME: this shouldn't be needed if proper inputs are set
+            dependsOn = [build]
+
+            boardConfigurationType = taskName - CalculateValidBoardProbabilityRule.prefix - CalculateValidBoardProbabilityRule.suffix
+        }
+    }
+}
+
 class GenerateBoardConfigurationRule {
     static final prefix = 'generate'
     static final suffix = 'BoardConfiguration'
@@ -40,6 +57,9 @@ class GenerateBoardConfigurationRule {
 tasks.addRule("Pattern: ${GenerateBoardConfigurationRule.prefix}<Type>${GenerateBoardConfigurationRule.suffix}") { String taskName ->
     if (taskName.startsWith(GenerateBoardConfigurationRule.prefix) && taskName.endsWith(GenerateBoardConfigurationRule.suffix)) {
         task(taskName, type: sfc.GenerateBoardConfiguration) {
+            // FIXME: this shouldn't be needed if proper inputs are set
+            dependsOn = [build]
+
             boardConfigurationType = taskName - GenerateBoardConfigurationRule.prefix - GenerateBoardConfigurationRule.suffix
         }
     }

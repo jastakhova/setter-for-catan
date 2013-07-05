@@ -1,15 +1,15 @@
-package sfc;
+package sfc
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.InputFile
-import org.gradle.api.tasks.InputFiles;
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.TaskAction
 
 /**
  * @author noel.yap@gmail.com
  */
-// TODO: refactor duplicate code with CalculateValidBoardProbability
-class GenerateBoardConfiguration extends DefaultTask {
+// TODO: refactor duplicate code with GenerateBoardConfiguration
+class CalculateValidBoardProbability extends DefaultTask {
     @InputFiles
     def configuration = project.configurations.compile
 
@@ -35,7 +35,7 @@ class GenerateBoardConfiguration extends DefaultTask {
                 "SCALA_HOME=${System.getenv('SCALA_HOME')}"
         ]
 
-        final command = [executable.toString(), boardConfigurationName]
+        final command = [executable.toString(), boardConfigurationName, 'count']
         final process = command.execute(env, null)
 
         println process.text
