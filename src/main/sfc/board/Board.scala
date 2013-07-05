@@ -1,7 +1,6 @@
 package sfc.board
 
 import sfc.placement._
-import sfc.pieces.Tile.Tile
 import sfc.pieces.Chits
 
 import play.api.libs.json.{JsArray, JsObject}
@@ -9,16 +8,8 @@ import play.api.libs.json.{JsArray, JsObject}
 /**
  * @author noel.yap@gmail.com
  */
-class Board(configuration: Board.Configuration) {
-  type PieceConfig = Pair[Position, Pair[Tile, Chits]]
-
-  private val sortedConfiguration: List[(Position, (Tile, Chits))] = configuration.toList.sortWith {
-    (lhs, rhs) =>
-      val lCoordinate = lhs._1.coordinate
-      val rCoordinate = rhs._1.coordinate
-
-      math.abs(lCoordinate.x) + math.abs(lCoordinate.y) < math.abs(rCoordinate.x) + math.abs(rCoordinate.y)
-  }
+class Board(configuration: Configuration) {
+  private val sortedConfiguration = configuration.sorted
 
   override def toString = {
     sortedConfiguration map { pp =>
@@ -48,44 +39,11 @@ class Board(configuration: Board.Configuration) {
     })
   }
 
-  def check: Boolean = {
-    def oddsBound(from: Int, to: Int) = (from to to).sum
-
-    configuration forall { pieceConfig: PieceConfig =>
-      val position = pieceConfig._1
-
-      position.vertices forall { vertex =>
-        val intersection = Intersection(position.coordinate, vertex)
-        val adjacentPositions = (
-          HexagonPosition.adjacentPositions(intersection) ++
-          ChevronPosition.adjacentPositions(intersection))
-        //println("intersection = " + intersection)
-        //println("adjacentPositions = " + adjacentPositions)
-
-        val chitsList: List[Chits] = (configuration filterKeys { key =>
-          //println("key = " + key + " " + (adjacentPositions contains key))
-          adjacentPositions contains key
-        } map { entry =>
-          entry._2._2
-        }).toList
-        val adjacentCount = chitsList.length
-        val adjacentOdds: Int = (chitsList map { chits =>
-          //println(chits + ".odds = " + chits.odds)
-          chits.odds
-        }).sum
-
-        val oddsRange = oddsBound(1, adjacentCount) to oddsBound(Vertex.maxId - adjacentCount, Vertex.maxId - 1)
-
-        //println(adjacentCount + " " + adjacentOdds + " " + oddsRange)
-        oddsRange contains adjacentOdds
-      }
-    }
+  def check: Boolean = configuration.check { intersection: Intersection =>
+    HexagonPosition.adjacentPositions(intersection) ++ ChevronPosition.adjacentPositions(intersection)
   }
 }
 
 object Board {
-  // TODO: use Configuration class/object
-  type Configuration = Map[Position, Pair[Tile, Chits]]
-
-  def apply(configuration: Configuration) = new Board(configuration)
+  def apply(configuration: Configuration.PiecesConfigSpec*) = new Board(Configuration(configuration: _*))
 }

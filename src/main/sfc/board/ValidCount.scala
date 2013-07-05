@@ -9,8 +9,7 @@ object ValidCount {
     var result = 0
 
     for (i <- 1 to sampleSize) {
-      val configuration = Configuration.apply(piecesConfigSpec: _*)
-      val board = Board(configuration.configuration)
+      val board = Board(piecesConfigSpec: _*)
 
       if (board.check) {
         result += 1

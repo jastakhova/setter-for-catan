@@ -10,25 +10,27 @@ import sfc.placement.EdgeOrientation._
  */
 object SmallBoard {
   val desertTiles = IndexedSeq(Desert)
-  val resourceTiles: IndexedSeq[Tile] = (
+  val resourceTiles: IndexedSeq[Tile] = {
     Field * 4 ++
     Forest * 4 ++
     Hill * 3 ++
     Mountain * 3 ++
-    Pasture * 4)
-  val portTiles: IndexedSeq[Tile] = (
+    Pasture * 4
+  }
+  val portTiles: IndexedSeq[Tile] = {
     AnyPort * 4 ++ IndexedSeq(
       BrickPort,
       GrainPort,
       LumberPort,
       OrePort,
-      WoolPort))
+      WoolPort)
+  }
 
   val desertChits = IndexedSeq(Chits(0))
   val resourceChits = IndexedSeq(2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12) map {
     Chits(_)
   }
-  val portChits: IndexedSeq[Chits] = ((0 until 9) map { _ =>
+  val portChits: IndexedSeq[Chits] = ({0 until 9} map { _ =>
     Chits(0)
   }).toIndexedSeq
 

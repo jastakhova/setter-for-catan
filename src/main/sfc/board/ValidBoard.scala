@@ -5,8 +5,7 @@ package sfc.board
  */
 object ValidBoard {
   def apply(piecesConfigSpec: Configuration.PiecesConfigSpec*): Board = {
-    val configuration = Configuration.apply(piecesConfigSpec: _*)
-    val board = Board(configuration.configuration)
+    val board = Board(piecesConfigSpec: _*)
 
     if (board.check) {
       board
