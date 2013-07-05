@@ -40,7 +40,7 @@ class CalculateValidBoardProbabilityRule {
 
 tasks.addRule("Pattern: ${CalculateValidBoardProbabilityRule.prefix}<Type>${CalculateValidBoardProbabilityRule.suffix}") { String taskName ->
     if (taskName.startsWith(CalculateValidBoardProbabilityRule.prefix) && taskName.endsWith(CalculateValidBoardProbabilityRule.suffix)) {
-        task(taskName, type: sfc.CalculateValidBoardProbability) {
+        task(taskName, type: sfc.CalculateValidBoardProbabilityTask) {
             // FIXME: this shouldn't be needed if proper inputs are set
             dependsOn = [build]
 
@@ -49,18 +49,18 @@ tasks.addRule("Pattern: ${CalculateValidBoardProbabilityRule.prefix}<Type>${Calc
     }
 }
 
-class GenerateBoardConfigurationRule {
-    static final prefix = 'generate'
+class GenerateValidBoardConfigurationRule {
+    static final prefix = 'generateValid'
     static final suffix = 'BoardConfiguration'
 }
 
-tasks.addRule("Pattern: ${GenerateBoardConfigurationRule.prefix}<Type>${GenerateBoardConfigurationRule.suffix}") { String taskName ->
-    if (taskName.startsWith(GenerateBoardConfigurationRule.prefix) && taskName.endsWith(GenerateBoardConfigurationRule.suffix)) {
-        task(taskName, type: sfc.GenerateBoardConfiguration) {
+tasks.addRule("Pattern: ${GenerateValidBoardConfigurationRule.prefix}<Type>${GenerateValidBoardConfigurationRule.suffix}") { String taskName ->
+    if (taskName.startsWith(GenerateValidBoardConfigurationRule.prefix) && taskName.endsWith(GenerateValidBoardConfigurationRule.suffix)) {
+        task(taskName, type: sfc.GenerateValidBoardConfigurationTask) {
             // FIXME: this shouldn't be needed if proper inputs are set
             dependsOn = [build]
 
-            boardConfigurationType = taskName - GenerateBoardConfigurationRule.prefix - GenerateBoardConfigurationRule.suffix
+            boardConfigurationType = taskName - GenerateValidBoardConfigurationRule.prefix - GenerateValidBoardConfigurationRule.suffix
         }
     }
 }

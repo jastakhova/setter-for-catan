@@ -21,7 +21,7 @@ object `setter-for-catan` {
       }
       case 2 => {
         if (args(1) == "count") {
-          def probability = args(0) match {
+          val probability = args(0) match {
             case "small" => SmallBoard.probability
             case "small-spiral" => SmallSpiralBoard.probability
             case "small-traders-and-barbarians" => SmallTradersAndBarbariansBoard.probability
