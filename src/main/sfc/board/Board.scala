@@ -84,6 +84,7 @@ class Board(configuration: Board.Configuration) {
 }
 
 object Board {
+  // TODO: use Configuration class/object
   type Configuration = Map[Position, Pair[Tile, Chits]]
 
   def apply(configuration: Configuration) = new Board(configuration)

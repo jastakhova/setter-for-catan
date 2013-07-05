@@ -79,12 +79,12 @@ object SmallBoard {
     new TrianglePosition(coordinate, orientation)
   }
 
-  val hexagonPiecesConfiguration: ValidBoard.PiecesConfigSpec = (
+  val hexagonPiecesConfiguration: Configuration.PiecesConfigSpec = (
     hexagonPositions,
     IndexedSeq(
       (desertTiles, desertChits),
       (resourceTiles, resourceChits)))
-  val trianglePiecesConfiguration: ValidBoard.PiecesConfigSpec = (
+  val trianglePiecesConfiguration: Configuration.PiecesConfigSpec = (
     trianglePositions,
     IndexedSeq(
       (portTiles, portChits)))

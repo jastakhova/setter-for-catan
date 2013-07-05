@@ -47,13 +47,13 @@ object SmallSpiralBoard {
     new ChevronPosition(coordinate, orientation)
   }
 
-  val hexagonPiecesConfiguration: ValidBoard.PiecesConfigSpec = (
+  val hexagonPiecesConfiguration: Configuration.PiecesConfigSpec = (
     hexagonPositions,
     IndexedSeq(
       (desertTiles, desertChits),
       (resourceTiles, resourceChits),
       (lakeTiles, lakeChits)))
-  val chevronPiecesConfiguration: ValidBoard.PiecesConfigSpec = (
+  val chevronPiecesConfiguration: Configuration.PiecesConfigSpec = (
     chevronPositions,
     IndexedSeq(
       (fisheryTiles, fisheryChits)))

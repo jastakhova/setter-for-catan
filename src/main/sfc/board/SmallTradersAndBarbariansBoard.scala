@@ -21,7 +21,7 @@ object SmallTradersAndBarbariansBoard {
     new HexagonPosition(_)
   }
 
-  val hexagonPiecesConfiguration: ValidBoard.PiecesConfigSpec = (
+  val hexagonPiecesConfiguration: Configuration.PiecesConfigSpec = (
     hexagonPositions,
     IndexedSeq(
       (resourceTiles, resourceChits)))
