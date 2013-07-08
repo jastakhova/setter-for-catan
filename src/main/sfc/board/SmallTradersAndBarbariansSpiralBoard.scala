@@ -5,7 +5,7 @@ import sfc.placement.{VertexOrientation, ChevronPosition, HexagonPosition, Coord
 /**
  * @author noel.yap@gmail.com
  */
-object SmallTradersAndBarbariansSpiralBoard {
+object SmallTradersAndBarbariansSpiralBoard extends ValidCount {
   val resourceTiles = SmallTradersAndBarbariansBoard.resourceTiles ++ SmallSpiralBoard.resourceTilesAdded
   val lakeTiles = SmallSpiralBoard.lakeTiles
   val fisheryTiles = SmallSpiralBoard.fisheryTiles
@@ -38,9 +38,6 @@ object SmallTradersAndBarbariansSpiralBoard {
       (fisheryTiles, fisheryChits)))
   val trianglePiecesConfiguration = SmallBoard.trianglePiecesConfiguration
 
-  def board = ValidBoard(hexagonPiecesConfiguration, chevronPiecesConfiguration, trianglePiecesConfiguration)
-
-  val sampleSize = math.pow(6, 6).round
-  def count = ValidCount(hexagonPiecesConfiguration, trianglePiecesConfiguration)(sampleSize.asInstanceOf[Int])
-  def probability = count.asInstanceOf[Double] / sampleSize
+  def board: Board = ValidBoard(hexagonPiecesConfiguration, chevronPiecesConfiguration, trianglePiecesConfiguration)
+  protected override def count = ValidCount(hexagonPiecesConfiguration, chevronPiecesConfiguration, trianglePiecesConfiguration)
 }

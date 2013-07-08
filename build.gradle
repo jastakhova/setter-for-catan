@@ -1,6 +1,7 @@
 import sun.tools.jar.resources.jar
 
 apply plugin: 'application'
+apply plugin: 'idea'
 apply plugin: 'scala'
 
 repositories {
@@ -16,6 +17,7 @@ dependencies {
     compile 'org.hamcrest:hamcrest-core:1.1'
     compile 'org.scalatest:scalatest_2.10:1.9.1'
 
+    compile 'com.typesafe.akka:akka-actor_2.10:2.1.4'
     compile group: 'play', name: 'play_2.10', version: '2.1.1', configuration: 'compile'
 }
 

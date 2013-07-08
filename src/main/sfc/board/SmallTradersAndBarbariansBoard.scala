@@ -7,7 +7,7 @@ import sfc.placement.{HexagonPosition, Coordinate}
 /**
  * @author noel.yap@gmail.com
  */
-object SmallTradersAndBarbariansBoard {
+object SmallTradersAndBarbariansBoard extends ValidCount {
   val resourceTilesRemoved = IndexedSeq(Field, Pasture)
   val resourceTiles = SmallBoard.resourceTiles diff resourceTilesRemoved
 
@@ -27,9 +27,6 @@ object SmallTradersAndBarbariansBoard {
       (resourceTiles, resourceChits)))
   val trianglePiecesConfiguration = SmallBoard.trianglePiecesConfiguration
 
-  def board = ValidBoard(hexagonPiecesConfiguration, trianglePiecesConfiguration)
-
-  val sampleSize = math.pow(6, 6).round
-  def count = ValidCount(hexagonPiecesConfiguration, trianglePiecesConfiguration)(sampleSize.asInstanceOf[Int])
-  def probability = count.asInstanceOf[Double] / sampleSize
+  def board: Board = ValidBoard(hexagonPiecesConfiguration, trianglePiecesConfiguration)
+  protected override def count = ValidCount(hexagonPiecesConfiguration, trianglePiecesConfiguration)
 }

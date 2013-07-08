@@ -8,7 +8,7 @@ import sfc.placement.EdgeOrientation._
 /**
  * @author noel.yap@gmail.com
  */
-object SmallBoard {
+object SmallBoard extends ValidCount {
   val desertTiles = IndexedSeq(Desert)
   val resourceTiles: IndexedSeq[Tile] = {
     Field * 4 ++
@@ -91,9 +91,6 @@ object SmallBoard {
     IndexedSeq(
       (portTiles, portChits)))
 
-  def board = ValidBoard(hexagonPiecesConfiguration, trianglePiecesConfiguration)
-
-  val sampleSize = math.pow(6, 6).round
-  def count = ValidCount(hexagonPiecesConfiguration, trianglePiecesConfiguration)(sampleSize.asInstanceOf[Int])
-  def probability = count.asInstanceOf[Double] / sampleSize
+  def board: Board = ValidBoard(hexagonPiecesConfiguration, trianglePiecesConfiguration)
+  protected override def count = ValidCount(hexagonPiecesConfiguration, trianglePiecesConfiguration)
 }
