@@ -29,6 +29,20 @@ class SetterForCatan {
         process.text
     }
 
+    void createScript(File script) {
+        final classpath = configuration.inject(library.toString()) { String accum, File file ->
+            "${accum}:${file}"
+        }
+
+        script << ('#!/bin/bash\n')
+        script << ('\n')
+        script << ("export CLASSPATH=${classpath}\n")
+        script << ("export JAVA_HOME=${System.getenv('JAVA_HOME')}\n")
+        script << ("export SCALA_HOME=${System.getenv('SCALA_HOME')}\n")
+        script << ('\n')
+        script << ("${executable} \"\$@\"\n")
+    }
+
     private static String camelCaseToHyphenated(final camelCasedString) {
         int index = indexOfUpperCaseLetter(camelCasedString, 0)
         if (index == -1) {

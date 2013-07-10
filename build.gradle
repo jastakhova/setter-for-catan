@@ -35,6 +35,8 @@ sourceSets {
     }
 }
 
+task createScript(type: sfc.CreateScriptTask)
+
 class CalculateValidBoardProbabilityRule {
     static final prefix = 'calculateValid'
     static final suffix = 'BoardProbability'

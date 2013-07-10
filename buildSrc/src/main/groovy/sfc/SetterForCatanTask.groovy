@@ -8,6 +8,9 @@ import org.gradle.api.tasks.InputFiles
  * @author noel.yap@gmail.com
  */
 class SetterForCatanTask extends DefaultTask {
+    @InputFile
+    def setterForCatan = new File("${project.projectDir}/buildSrc/src/main/groovy/sfc/SetterForCatan.groovy")
+
     @InputFiles
     def configuration = project.configurations.compile
 
