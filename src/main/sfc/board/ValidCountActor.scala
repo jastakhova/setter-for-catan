@@ -17,14 +17,18 @@ class ValidCountActor extends Actor {
       count += 1
     }
 
-    case GetResult => {
-      sender ! Pair(result, count)
+    case GetResult(expectedCount) => {
+      if (count == expectedCount) {
+        sender ! Pair(result, count)
+      } else {
+        self.tell(GetResult(expectedCount), sender)
+      }
     }
   }
 }
 
 object ValidCountActor {
-  case object GetResult
+  case class GetResult(expectedCount: Int)
 
   var result = 0
   var count = 0
