@@ -28,26 +28,28 @@ object ValidCount {
   private implicit val timeout = Timeout((sampleSize / 648).seconds)
 
   def apply(piecesConfigSpec: Configuration.PiecesConfigSpec*): (Int => Pair[Int, Int]) = { sampleSize: Int =>
-    val numberOfGenerators = math.min(sampleSize, 127)
     val system = ActorSystem("SetterForCatan")
-    val validCountActor = system.actorOf(Props[ValidCountActor], "validCountActor")
 
-    for (i <- 0 until numberOfGenerators) {
-      system.actorOf(Props[GenerateBoardActor], s"generateBoardActor.${i}")
+    try {
+      val validCountActor = system.actorOf(Props[ValidCountActor], "validCountActor")
+      val numberOfGenerators = math.min(sampleSize, 127)
+
+      // TODO: use Akka to make loop concurrent with board creation
+      for (i <- 0 until numberOfGenerators) {
+        system.actorOf(Props[GenerateBoardActor], s"generateBoardActor.${i}")
+      }
+
+      for (i <- 1 to sampleSize) {
+        val generateBoardActor = system.actorFor(s"user/generateBoardActor.${Random.nextInt(numberOfGenerators)}")
+
+        generateBoardActor.tell(GenerateBoardActor.GenerateBoard(piecesConfigSpec: _*), validCountActor)
+      }
+
+      val count = validCountActor ? ValidCountActor.GetResult(sampleSize)
+
+      Await.result(count.mapTo[Pair[Int, Int]], timeout.duration)
+    } finally {
+      system.shutdown()
     }
-
-    for (i <- 1 to sampleSize) {
-      val generateBoardActor = system.actorFor(s"user/generateBoardActor.${Random.nextInt(numberOfGenerators)}")
-
-      generateBoardActor.tell(GenerateBoardActor.Configuration(piecesConfigSpec: _*), validCountActor)
-    }
-
-    val count = validCountActor ? ValidCountActor.GetResult(sampleSize)
-    val result = Await.result(count.mapTo[Pair[Int, Int]], timeout.duration)
-
-    // FIXME: hangs upon timeout
-    system.shutdown()
-
-    result
   }
 }

@@ -8,7 +8,7 @@ import play.api.libs.json.{JsArray, JsObject}
 /**
  * @author noel.yap@gmail.com
  */
-class Board(configuration: Configuration) {
+class Board(val configuration: Configuration) {
   private val sortedConfiguration = configuration.sorted
 
   override def toString = {
