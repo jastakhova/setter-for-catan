@@ -41,6 +41,8 @@ class SetterForCatan {
         script << ("export SCALA_HOME=${System.getenv('SCALA_HOME')}\n")
         script << ('\n')
         script << ("${executable} \"\$@\"\n")
+
+        script.setExecutable(true)
     }
 
     private static String camelCaseToHyphenated(final camelCasedString) {
