@@ -8,30 +8,30 @@ import akka.actor.Actor
 class ValidCountActor extends Actor {
   import ValidCountActor._
 
-  def receive = {
+  private def processMessages(numberOfValidBoards: Int, sampleSize: Int): Receive = {
     case board: Board => {
-      if (board.check) {
-        result += 1
+      implicit def booleanToInt(b: Boolean) = if (b) {
+        1
+      } else {
+        0
       }
 
-      count += 1
+      context.become(processMessages(numberOfValidBoards + board.check, sampleSize + 1))
     }
 
-    case GetResult(expectedCount) => {
+    case GetResult(expectedSampleSize) => {
       // TODO: use stash
-      if (count == expectedCount) {
-        sender ! Pair(result, count)
+      if (sampleSize == expectedSampleSize) {
+        sender ! Pair(numberOfValidBoards, sampleSize)
       } else {
-        self forward GetResult(expectedCount)
+        self forward GetResult(expectedSampleSize)
       }
     }
   }
+
+  def receive = processMessages(0, 0)
 }
 
 object ValidCountActor {
   case class GetResult(expectedCount: Int)
-
-  // TODO: remove use of var
-  var result = 0
-  var count = 0
 }
