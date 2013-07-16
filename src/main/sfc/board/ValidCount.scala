@@ -2,10 +2,10 @@ package sfc.board
 
 import akka.actor.{Props, ActorSystem}
 import akka.pattern.ask
+import akka.routing.RandomRouter
 import akka.util.Timeout
 import scala.concurrent.Await
 import scala.concurrent.duration._
-import scala.util.Random
 
 /**
  * @author noel.yap@gmail.com
@@ -31,22 +31,16 @@ object ValidCount {
     val system = ActorSystem("SetterForCatan")
 
     try {
-      val validCountActor = system.actorOf(Props[ValidCountActor], "validCountActor")
+      val validCountActor = system.actorOf(Props[ValidCountActor], "validCount")
+
       val numberOfGenerators = math.min(sampleSize, 127)
-
-      // TODO: use Akka to make loop concurrent with board creation
-      for (i <- 0 until numberOfGenerators) {
-        system.actorOf(Props[GenerateBoardActor], s"generateBoardActor.${i}")
-      }
-
+      val generateBoardActor = system.actorOf(
+        Props[GenerateBoardActor].withRouter(RandomRouter(nrOfInstances = numberOfGenerators)), "generateBoard")
       for (i <- 1 to sampleSize) {
-        val generateBoardActor = system.actorFor(s"user/generateBoardActor.${Random.nextInt(numberOfGenerators)}")
-
         generateBoardActor.tell(GenerateBoardActor.GenerateBoard(piecesConfigSpec: _*), validCountActor)
       }
 
       val count = validCountActor ? ValidCountActor.GetResult(sampleSize)
-
       Await.result(count.mapTo[Pair[Int, Int]], timeout.duration)
     } finally {
       system.shutdown()

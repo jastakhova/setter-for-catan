@@ -18,10 +18,11 @@ class ValidCountActor extends Actor {
     }
 
     case GetResult(expectedCount) => {
+      // TODO: use stash
       if (count == expectedCount) {
         sender ! Pair(result, count)
       } else {
-        self.tell(GetResult(expectedCount), sender)
+        self forward GetResult(expectedCount)
       }
     }
   }
@@ -30,6 +31,7 @@ class ValidCountActor extends Actor {
 object ValidCountActor {
   case class GetResult(expectedCount: Int)
 
+  // TODO: remove use of var
   var result = 0
   var count = 0
 }
