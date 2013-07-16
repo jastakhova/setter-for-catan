@@ -8,7 +8,7 @@ import akka.actor.Actor
 class ValidBoardActor extends Actor {
   import ValidBoardActor._
 
-  def processResult(board: Board): Receive = {
+  private def processResult(board: Board): Receive = {
     case board: Board => {
       context.stop(sender)
     }
@@ -18,9 +18,10 @@ class ValidBoardActor extends Actor {
     }
   }
 
-  def processBoards: Receive = {
+  private def processBoards: Receive = {
     case board: Board => {
       if (board.check) {
+        // TODO: kill sender parent
         context.stop(context.actorFor(sender.path.parent))
 
         context.become(processResult(board))
