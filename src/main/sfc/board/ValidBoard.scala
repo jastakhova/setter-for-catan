@@ -11,13 +11,13 @@ import scala.concurrent.duration._
  * @author noel.yap@gmail.com
  */
 object ValidBoard {
-  private implicit val timeout = Timeout(12.seconds)
+  private implicit val timeout = Timeout(60.seconds)
 
   def apply(piecesConfigSpec: Configuration.PiecesConfigSpec*): Board = {
     val system = ActorSystem("SetterForCatan")
 
     try {
-      val validBoardActor = system.actorOf(Props[ValidBoardActor], "validBoardActor")
+      val validBoardActor = system.actorOf(Props[ValidBoardActor], "validBoard")
 
       val numberOfGenerators = (math.log(.5)/math.log(1 - .0005)).round.asInstanceOf[Int]
       val generateBoardActor = system.actorOf(
