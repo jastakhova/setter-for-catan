@@ -1,6 +1,6 @@
 package sfc.board
 
-import akka.actor.Actor
+import akka.actor.{Kill, Actor}
 
 /**
  * @author noel.yap@gmail.com
@@ -9,10 +9,6 @@ class ValidBoardActor extends Actor {
   import ValidBoardActor._
 
   private def processResult(board: Board): Receive = {
-    case board: Board => {
-      context.stop(sender)
-    }
-
     case GetResult => {
       sender ! board
     }
@@ -21,8 +17,8 @@ class ValidBoardActor extends Actor {
   private def processBoards: Receive = {
     case board: Board => {
       if (board.check) {
-        // TODO: kill sender parent
-        context.stop(context.actorFor(sender.path.parent))
+        val generateBoardActor = context.actorFor(sender.path.parent)
+        generateBoardActor ! Kill
 
         context.become(processResult(board))
       } else {
@@ -31,6 +27,7 @@ class ValidBoardActor extends Actor {
     }
 
     case GetResult => {
+      // TODO: use stash
       self.tell(GetResult, sender)
     }
   }
