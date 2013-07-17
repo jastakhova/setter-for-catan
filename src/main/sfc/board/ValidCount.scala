@@ -2,7 +2,7 @@ package sfc.board
 
 import akka.actor.{Props, ActorSystem}
 import akka.pattern.ask
-import akka.routing.RandomRouter
+import akka.routing.SmallestMailboxRouter
 import akka.util.Timeout
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -35,7 +35,7 @@ object ValidCount {
 
       val numberOfGenerators = math.min(sampleSize, 127)
       val generateBoardActor = system.actorOf(
-        Props[GenerateBoardActor].withRouter(RandomRouter(nrOfInstances = numberOfGenerators)), "generateBoard")
+        Props[GenerateBoardActor].withRouter(SmallestMailboxRouter(nrOfInstances = numberOfGenerators)), "generateBoard")
       for (i <- 1 to sampleSize) {
         generateBoardActor.tell(GenerateBoardActor.GenerateBoard(piecesConfigSpec: _*), validCountActor)
       }

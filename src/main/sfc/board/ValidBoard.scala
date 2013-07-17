@@ -2,7 +2,7 @@ package sfc.board
 
 import akka.actor.{Props, ActorSystem}
 import akka.pattern.ask
-import akka.routing.RoundRobinRouter
+import akka.routing.SmallestMailboxRouter
 import akka.util.Timeout
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -19,9 +19,10 @@ object ValidBoard {
     try {
       val validBoardActor = system.actorOf(Props[ValidBoardActor], "validBoard")
 
+      // TODO: use ScatterGatherFirstCompletedRouter
       val numberOfGenerators = (math.log(.5)/math.log(1 - .0005)).round.asInstanceOf[Int]
       val generateBoardActor = system.actorOf(
-        Props[GenerateBoardActor].withRouter(RoundRobinRouter(nrOfInstances = numberOfGenerators)), "generateBoard")
+        Props[GenerateBoardActor].withRouter(SmallestMailboxRouter(nrOfInstances = numberOfGenerators)), "generateBoard")
       for (i <- 1 to numberOfGenerators) {
         generateBoardActor.tell(GenerateBoardActor.GenerateBoard(piecesConfigSpec: _*), validBoardActor)
       }
