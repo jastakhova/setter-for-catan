@@ -17,4 +17,6 @@ class GenerateBoardActor extends Actor {
 
 object GenerateBoardActor {
   case class GenerateBoard(configuration: Configuration.PiecesConfigSpec*)
+
+  val name = "generateBoard"
 }

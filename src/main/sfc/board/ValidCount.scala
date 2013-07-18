@@ -35,7 +35,8 @@ object ValidCount {
 
       val numberOfGenerators = math.min(sampleSize, 127)
       val generateBoardActor = system.actorOf(
-        Props[GenerateBoardActor].withRouter(SmallestMailboxRouter(nrOfInstances = numberOfGenerators)), "generateBoard")
+        Props[GenerateBoardActor].withRouter(SmallestMailboxRouter(nrOfInstances = numberOfGenerators)),
+        "generateBoard")
       for (i <- 1 to sampleSize) {
         generateBoardActor.tell(GenerateBoardActor.GenerateBoard(piecesConfigSpec: _*), validCountActor)
       }

@@ -1,40 +1,54 @@
 package sfc.board
 
-import akka.actor.{Kill, Actor}
+import akka.actor.{Actor, ActorRef}
+import akka.util.Timeout
+import scala.concurrent.duration._
+import sfc.board.GenerateBoardActor.GenerateBoard
 
 /**
  * @author noel.yap@gmail.com
  */
+// TODO: use FSM
 class ValidBoardActor extends Actor {
-  import ValidBoardActor._
+  private implicit val timeout = Timeout(12.seconds)
 
-  private def processResult(board: Board): Receive = {
-    case GetResult => {
-      sender ! board
-    }
+  private lazy val generateBoardActor = context.actorFor(s"/user/${GenerateBoardActor.name}")
+
+  private def stopProcessing: Receive = {
+    case _ =>
   }
 
-  private def processBoards: Receive = {
+  private def processBoards(requester: ActorRef, piecesConfigSpec: Configuration.PiecesConfigSpec*): Receive = {
     case board: Board => {
       if (board.check) {
-        val generateBoardActor = context.actorFor(sender.path.parent)
-        generateBoardActor ! Kill
+        requester ! board
 
-        context.become(processResult(board))
+        context.become(stopProcessing)
       } else {
-        self forward board.configuration
-      }
-    }
+        self ! GenerateBoard(piecesConfigSpec: _*)
 
-    case GetResult => {
-      // TODO: use stash
-      self.tell(GetResult, sender)
+        context.become(processRequests(requester))
+      }
     }
   }
 
-  def receive = processBoards
+  private def processRequests(requester: ActorRef): Receive = {
+    case GenerateBoard(configuration @ _*) => {
+      generateBoardActor ! GenerateBoard(configuration: _*)
+
+      context.become(processBoards(requester, configuration: _*))
+    }
+  }
+
+  def receive = {
+    case message => {
+      self forward message
+
+      context.become(processRequests(sender))
+    }
+  }
 }
 
 object ValidBoardActor {
-  case object GetResult
+  val name = "validBoard"
 }
