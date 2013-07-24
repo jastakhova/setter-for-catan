@@ -5,6 +5,7 @@ import sfc.placement.{VertexOrientation, ChevronPosition, HexagonPosition, Coord
 /**
  * @author noel.yap@gmail.com
  */
+// TODO: use config file
 object SmallTradersAndBarbariansSpiralBoard extends ValidCount {
   val resourceTiles = SmallTradersAndBarbariansBoard.resourceTiles ++ SmallSpiralBoard.resourceTilesAdded
   val lakeTiles = SmallSpiralBoard.lakeTiles

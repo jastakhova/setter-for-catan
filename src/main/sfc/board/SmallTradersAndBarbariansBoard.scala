@@ -7,6 +7,7 @@ import sfc.placement.{HexagonPosition, Coordinate}
 /**
  * @author noel.yap@gmail.com
  */
+// TODO: use config file
 object SmallTradersAndBarbariansBoard extends ValidCount {
   val resourceTilesRemoved = IndexedSeq(Field, Pasture)
   val resourceTiles = SmallBoard.resourceTiles diff resourceTilesRemoved

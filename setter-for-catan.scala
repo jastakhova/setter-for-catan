@@ -12,6 +12,7 @@ object `setter-for-catan` {
   def main(args: Array[String]) {
     args.length match {
       case 1 => {
+        // TODO: use graphics to display board
         println(args(0) match {
         case "small" => SmallBoard.board
         case "small-spiral" => SmallSpiralBoard.board

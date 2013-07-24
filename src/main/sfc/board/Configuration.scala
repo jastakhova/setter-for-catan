@@ -54,6 +54,7 @@ object Configuration {
   type PiecesConfigSpec = Pair[IndexedSeq[Position], IndexedSeq[Pair[IndexedSeq[Tile], IndexedSeq[Chits]]]]
 
   def apply(piecesConfigSpec: PiecesConfigSpec*): Configuration = {
+    // TODO: investigate whether or not it makes sense to use `Future` here
     new Configuration((piecesConfigSpec flatMap {
       it =>
         val coordinates = it._1
@@ -71,6 +72,7 @@ object Configuration {
   private def shuffleZip[T, U](lhs: IndexedSeq[T], rhs: IndexedSeq[U]): IndexedSeq[Pair[T, U]] = {
     require(lhs.size == rhs.size)
 
+    // TODO: use `breeze.stats.random.MersenneTwister` from scalanlp.org
     Random.shuffle(lhs) zip Random.shuffle(rhs)
   }
 }

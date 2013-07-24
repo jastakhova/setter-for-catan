@@ -12,7 +12,6 @@ import sfc.board.GenerateBoardActor.GenerateBoard
 class ValidBoardActor extends Actor {
   private implicit val timeout = Timeout(12.seconds)
 
-  private lazy val generateBoardActor = context.actorFor(s"/user/${GenerateBoardActor.name}")
 
   private def stopProcessing: Receive = {
     case _ =>
@@ -21,6 +20,8 @@ class ValidBoardActor extends Actor {
   private def processBoards(requester: ActorRef, piecesConfigSpec: Configuration.PiecesConfigSpec*): Receive = {
     case board: Board => {
       if (board.check) {
+        // TODO: stop `generateBoardActor`
+
         requester ! board
 
         context.become(stopProcessing)
@@ -34,6 +35,8 @@ class ValidBoardActor extends Actor {
 
   private def processRequests(requester: ActorRef): Receive = {
     case GenerateBoard(configuration @ _*) => {
+      // FIXME: handle race condition in which generateBoardActor may not yet be ready
+      val generateBoardActor = context.actorFor(s"/user/${GenerateBoardActor.name}")
       generateBoardActor ! GenerateBoard(configuration: _*)
 
       context.become(processBoards(requester, configuration: _*))

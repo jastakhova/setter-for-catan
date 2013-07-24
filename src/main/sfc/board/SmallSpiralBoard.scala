@@ -9,6 +9,7 @@ import sfc.placement.VertexOrientation.VertexOrientation
 /**
  * @author noel.yap@gmail.com
  */
+// TODO: use config file
 object SmallSpiralBoard extends ValidCount {
   val desertTiles = SmallBoard.desertTiles
   val resourceTilesAdded = GoldField * 2

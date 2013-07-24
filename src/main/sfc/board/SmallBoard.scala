@@ -8,6 +8,7 @@ import sfc.placement.EdgeOrientation._
 /**
  * @author noel.yap@gmail.com
  */
+// TODO: use config file
 object SmallBoard extends ValidCount {
   val desertTiles = IndexedSeq(Desert)
   val resourceTiles: IndexedSeq[Tile] = {

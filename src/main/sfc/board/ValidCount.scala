@@ -21,6 +21,7 @@ abstract class ValidCount {
   }
 }
 
+// TODO: use config file
 object ValidCount {
   // FIXME: OOM if sampleSize is too large
   private val sampleSize: Int = math.pow(6, 6).round.asInstanceOf[Int]
@@ -34,13 +35,18 @@ object ValidCount {
       val validCountActor = system.actorOf(Props[ValidCountActor], "validCount")
 
       val numberOfGenerators = math.min(sampleSize, 127)
+      // TODO: set `supervisorStrategy` to resume children
+      // TODO: use `BroadcastRouter`
+      // TODO: allow resizing of number of routees
       val generateBoardActor = system.actorOf(
         Props[GenerateBoardActor].withRouter(SmallestMailboxRouter(nrOfInstances = numberOfGenerators)),
         "generateBoard")
+      // TODO: have `generateBoard` constantly generate boards until stopped; expected to fix OOM
       for (i <- 1 to sampleSize) {
         generateBoardActor.tell(GenerateBoardActor.GenerateBoard(piecesConfigSpec: _*), validCountActor)
       }
 
+      // TODO: return `Future` rather than calling `Await.result`
       val count = validCountActor ? ValidCountActor.GetResult(sampleSize)
       Await.result(count.mapTo[Pair[Int, Int]], timeout.duration)
     } finally {
