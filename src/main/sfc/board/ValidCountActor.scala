@@ -1,12 +1,27 @@
 package sfc.board
 
-import akka.actor.Actor
+import akka.actor.{Props, Actor}
+import akka.routing.SmallestMailboxRouter
 
 /**
  * @author noel.yap@gmail.com
  */
-class ValidCountActor extends Actor {
+class ValidCountActor(sampleSize: Int, piecesConfigSpec: Configuration.PiecesConfigSpec*) extends Actor {
   import ValidCountActor._
+
+  override def preStart() {
+    val numberOfGenerators = math.min(sampleSize, 127)
+    // TODO: set `supervisorStrategy` to resume children
+    // TODO: use `BroadcastRouter`
+    // TODO: allow resizing of number of routees
+    val generateBoardActor = context.actorOf(
+      Props[GenerateBoardActor].withRouter(SmallestMailboxRouter(nrOfInstances = numberOfGenerators)),
+      "generateBoard")
+    // TODO: have `generateBoard` constantly generate boards until stopped; expected to fix OOM
+    for (i <- 1 to sampleSize) {
+      generateBoardActor ! GenerateBoardActor.GenerateBoard(piecesConfigSpec: _*)
+    }
+  }
 
   private def processMessages(numberOfValidBoards: Int, sampleSize: Int): Receive = {
     case board: Board => {

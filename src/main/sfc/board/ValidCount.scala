@@ -32,19 +32,7 @@ object ValidCount {
     val system = ActorSystem("SetterForCatan")
 
     try {
-      val validCountActor = system.actorOf(Props[ValidCountActor], "validCount")
-
-      val numberOfGenerators = math.min(sampleSize, 127)
-      // TODO: set `supervisorStrategy` to resume children
-      // TODO: use `BroadcastRouter`
-      // TODO: allow resizing of number of routees
-      val generateBoardActor = system.actorOf(
-        Props[GenerateBoardActor].withRouter(SmallestMailboxRouter(nrOfInstances = numberOfGenerators)),
-        "generateBoard")
-      // TODO: have `generateBoard` constantly generate boards until stopped; expected to fix OOM
-      for (i <- 1 to sampleSize) {
-        generateBoardActor.tell(GenerateBoardActor.GenerateBoard(piecesConfigSpec: _*), validCountActor)
-      }
+      val validCountActor = system.actorOf(Props(new ValidCountActor(sampleSize, piecesConfigSpec: _*)), "validCount")
 
       // TODO: return `Future` rather than calling `Await.result`
       val count = validCountActor ? ValidCountActor.GetResult(sampleSize)
