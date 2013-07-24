@@ -23,7 +23,7 @@ class ValidCountActor(sampleSize: Int, piecesConfigSpec: Configuration.PiecesCon
     }
   }
 
-  private def processMessages(numberOfValidBoards: Int, sampleSize: Int): Receive = {
+  private def processMessages(numberOfValidBoards: Int, currentSampleSize: Int): Receive = {
     case board: Board => {
       implicit def booleanToInt(b: Boolean) = if (b) {
         1
@@ -31,15 +31,15 @@ class ValidCountActor(sampleSize: Int, piecesConfigSpec: Configuration.PiecesCon
         0
       }
 
-      context.become(processMessages(numberOfValidBoards + board.check, sampleSize + 1))
+      context.become(processMessages(numberOfValidBoards + board.check, currentSampleSize + 1))
     }
 
-    case GetResult(expectedSampleSize) => {
+    case GetResult => {
       // TODO: use stash
-      if (sampleSize == expectedSampleSize) {
-        sender ! Pair(numberOfValidBoards, sampleSize)
+      if (currentSampleSize == sampleSize) {
+        sender ! Pair(numberOfValidBoards, currentSampleSize)
       } else {
-        self forward GetResult(expectedSampleSize)
+        self forward GetResult
       }
     }
   }
@@ -48,5 +48,5 @@ class ValidCountActor(sampleSize: Int, piecesConfigSpec: Configuration.PiecesCon
 }
 
 object ValidCountActor {
-  case class GetResult(expectedCount: Int)
+  case object GetResult
 }

@@ -23,8 +23,9 @@ abstract class ValidCount {
 
 // TODO: use config file
 object ValidCount {
-  // FIXME: OOM if sampleSize is too large
-  private val sampleSize: Int = math.pow(6, 6).round.asInstanceOf[Int]
+  // FIXME: OOM if currentSampleSize is too large
+  // private val sampleSize: Int = math.pow(6, 6).round.asInstanceOf[Int]
+  private val sampleSize: Int = math.pow(5, 5).round.asInstanceOf[Int]
 
   private implicit val timeout = Timeout((sampleSize / 648).seconds)
 
@@ -35,7 +36,7 @@ object ValidCount {
       val validCountActor = system.actorOf(Props(new ValidCountActor(sampleSize, piecesConfigSpec: _*)), "validCount")
 
       // TODO: return `Future` rather than calling `Await.result`
-      val count = validCountActor ? ValidCountActor.GetResult(sampleSize)
+      val count = validCountActor ? ValidCountActor.GetResult
       Await.result(count.mapTo[Pair[Int, Int]], timeout.duration)
     } finally {
       system.shutdown()
